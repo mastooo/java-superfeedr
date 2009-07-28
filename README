@@ -3,7 +3,6 @@ A java client library for SuperFeedr
 Dependency :
 
 Smack 3.1 (http://www.igniterealtime.org/downloads/index.jsp)
-smackx-pubsub extension to Smack (http://github.com/squaremo/smackx-pubsub/tree/master)
 Java 5+
 
-
+Thomas RICARD, July 2009
