@@ -32,7 +32,7 @@ import org.superfeedr.extension.SuperfeedrEventExtension;
 public class Test {
 	public static void main(final String[] args) throws Exception {
 		XMPPConnection.DEBUG_ENABLED = true;
-		Superfeedr feedr = new Superfeedr("thomas", "qwerty", "superfeedr.com");
+		Superfeedr feedr = new Superfeedr("##", "##", "superfeedr.com");
 
 		feedr.addOnNotificationHandler(new OnNotificationHandler() {
 			public void onNotification(final SuperfeedrEventExtension event) {

@@ -5,4 +5,10 @@ Dependency :
 Smack 3.1 (http://www.igniterealtime.org/downloads/index.jsp)
 Java 5+
 
+To use the Superfeedr java library, just add the file ./distrib/superfeedr.jar to your classpath.
+
+See the class org.superfeedr.test.Test to see an example of how to use it.
+
+Have fun
+
 Thomas RICARD, July 2009
