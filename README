@@ -7,7 +7,7 @@ Java 5+
 
 To use the Superfeedr java library, just add the file ./distrib/superfeedr.jar to your classpath.
 
-See the class org.superfeedr.test.Test to see an example of how to use it.
+See the class org.superfeedr.test.Test to know how to use it.
 
 Have fun
 
