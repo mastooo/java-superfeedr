@@ -56,7 +56,7 @@ import org.superfeedr.packet.SuperfeedrIQ;
  * @author thomas RICARD
  * 
  */
-public class Superfeedr implements PacketListener {
+public class Superfeedr {
 	
 	private static final String FIREHOSER = "firehoser.superfeedr.com";
 
@@ -119,7 +119,8 @@ public class Superfeedr implements PacketListener {
 		try {
 			connection.connect();
 			connection.login(this.jid, password);
-			connection.addPacketListener(this, new OrFilter(new AndFilter(new PacketTypeFilter(Message.class), new OrFilter(new IQTypeFilter(IQ.Type.ERROR), new IQTypeFilter(IQ.Type.RESULT))), new PacketTypeFilter(IQ.class)));
+			
+			connection.addPacketListener(new SuperFeedrPacketListener(), new OrFilter(new AndFilter(new PacketTypeFilter(Message.class), new OrFilter(new IQTypeFilter(IQ.Type.ERROR), new IQTypeFilter(IQ.Type.RESULT))), new PacketTypeFilter(IQ.class)));
 		} catch (XMPPException e) {
 			if (connection != null && connection.isConnected()) {
 				connection.disconnect();
@@ -164,41 +165,6 @@ public class Superfeedr implements PacketListener {
 	}
 
 	/**
-	 * this is a method responsible of parsing the received message and contruct
-	 * the corresponding java object for dispatch
-	 */
-	public void processPacket(final Packet packet) {
-		
-		if (packet instanceof Message){
-			fireOnNotificationHandlers((SuperfeedrEventExtension) ((Message) packet).getExtension(SuperfeedrEventExtension.NAMESPACE));
-		}else{
-			String packetID = packet.getPacketID();
-			onSubUnsubscriptionHandler handler = pendingOnSubUnSubHandlers.get(packetID);
-			if (handler != null){
-				pendingOnSubUnSubHandlers.remove(packetID);
-				
-				XMPPError error = packet.getError();
-				
-				if (error == null)
-					handler.onSubUnsubscription();
-				else{
-					StringBuilder builder = new StringBuilder(error.getCondition());
-					builder.append("Type = \n");
-					builder.append(error.getType().name());
-					builder.append("\n");
-					List<PacketExtension> extensions = error.getExtensions();
-					for (PacketExtension packetExtension : extensions) {
-						builder.append(packetExtension.getElementName());
-						builder.append("\n");
-					}
-					handler.onError(builder.toString());
-				}
-					
-			}
-		}
-	}
-
-	/**
 	 * Try to remove the specified handler from the list of notification handler
 	 * 
 	 * @param handler
@@ -233,4 +199,44 @@ public class Superfeedr implements PacketListener {
 	public void unsubscribe(List<URL> feedUrls, onSubUnsubscriptionHandler handler){
 		subUnsubscribe(new SubUnSubExtension(feedUrls, jid + "@" + server, SubUnSubExtension.TYPE_UNSUBSCRIPTION), handler);
 	}
+	
+	/**
+	 * This method is used to retreive the feeds URL you subscribed to.
+	 * @return a list of your feed url
+	 */
+	public List<URL> getSubscriptionList(){
+		throw new UnsupportedOperationException("Curently not available");
+	}
+	
+	private class SuperFeedrPacketListener implements PacketListener {
+		public void processPacket(Packet packet) {
+			if (packet instanceof Message){
+				fireOnNotificationHandlers((SuperfeedrEventExtension) ((Message) packet).getExtension(SuperfeedrEventExtension.NAMESPACE));
+			}else{
+				String packetID = packet.getPacketID();
+				onSubUnsubscriptionHandler handler = pendingOnSubUnSubHandlers.get(packetID);
+				if (handler != null){
+					pendingOnSubUnSubHandlers.remove(packetID);
+					
+					XMPPError error = packet.getError();
+					
+					if (error == null)
+						handler.onSubUnsubscription();
+					else{
+						StringBuilder builder = new StringBuilder(error.getCondition());
+						builder.append("Type = \n");
+						builder.append(error.getType().name());
+						builder.append("\n");
+						List<PacketExtension> extensions = error.getExtensions();
+						for (PacketExtension packetExtension : extensions) {
+							builder.append(packetExtension.getElementName());
+							builder.append("\n");
+						}
+						handler.onError(builder.toString());
+					}
+						
+				}
+			}
+		}
+	};
 }
