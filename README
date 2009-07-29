@@ -3,6 +3,7 @@ A java client library for SuperFeedr
 Dependency :
 
 Smack 3.1 (http://www.igniterealtime.org/downloads/index.jsp)
+Smackx library
 Java 5+
 
 To use the Superfeedr java library, just add the file ./distrib/superfeedr.jar to your classpath.
