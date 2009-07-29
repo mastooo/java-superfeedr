@@ -1,4 +1,6 @@
 org.superfeedr
-org.superfeedr.extension
+org.superfeedr.extension.notification
+org.superfeedr.extension.subscription
+org.superfeedr.packet
 org.superfeedr.provider
 org.superfeedr.test

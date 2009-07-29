@@ -19,22 +19,20 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.superfeedr.extension;
+package org.superfeedr.extension.notification;
 
-import org.jivesoftware.smack.packet.PacketExtension;
-
-public class DefaultSuperfeerExtension implements PacketExtension{
-
-	public String getElementName() {
-		return null;
+public class ItemExtension extends DefaultSuperfeerExtension{
+	
+	private EntryExtension entryExtension;
+	
+	public ItemExtension(EntryExtension entryExtension){
+		this.entryExtension = entryExtension;
 	}
-
-	public String getNamespace() {
-		return null;
+	
+	/**
+	 * @return the entry
+	 */
+	public EntryExtension getEntry() {
+		return entryExtension;
 	}
-
-	public String toXML() {
-		return null;
-	}
-
 }

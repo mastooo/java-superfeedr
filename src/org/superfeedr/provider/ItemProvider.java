@@ -25,8 +25,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.jivesoftware.smack.packet.PacketExtension;
-import org.superfeedr.extension.EntryExtension;
-import org.superfeedr.extension.ItemExtension;
+import org.superfeedr.extension.notification.EntryExtension;
+import org.superfeedr.extension.notification.ItemExtension;
 
 
 public class ItemProvider extends EmbeddedExtensionProvider

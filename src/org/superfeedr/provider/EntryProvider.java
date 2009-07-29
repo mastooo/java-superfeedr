@@ -26,7 +26,7 @@ import java.util.Date;
 import org.jivesoftware.smack.packet.PacketExtension;
 import org.jivesoftware.smack.provider.PacketExtensionProvider;
 import org.superfeedr.Superfeedr;
-import org.superfeedr.extension.EntryExtension;
+import org.superfeedr.extension.notification.EntryExtension;
 import org.xmlpull.v1.XmlPullParser;
 
 public class EntryProvider implements PacketExtensionProvider{

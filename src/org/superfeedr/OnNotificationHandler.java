@@ -21,7 +21,7 @@
  */
 package org.superfeedr;
 
-import org.superfeedr.extension.SuperfeedrEventExtension;
+import org.superfeedr.extension.notification.SuperfeedrEventExtension;
 
 /**
  * This interface must be implemented by the classes that need to be notified on events

@@ -27,8 +27,8 @@ import java.util.Map;
 import org.jivesoftware.smack.packet.DefaultPacketExtension;
 import org.jivesoftware.smack.packet.PacketExtension;
 import org.superfeedr.Superfeedr;
-import org.superfeedr.extension.HttpExtension;
-import org.superfeedr.extension.StatusExtension;
+import org.superfeedr.extension.notification.HttpExtension;
+import org.superfeedr.extension.notification.StatusExtension;
 
 public class StatusProvider extends EmbeddedExtensionProvider{
 

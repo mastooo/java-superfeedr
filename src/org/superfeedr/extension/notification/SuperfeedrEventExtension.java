@@ -19,20 +19,39 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.superfeedr.extension;
+package org.superfeedr.extension.notification;
 
-public class ItemExtension extends DefaultSuperfeerExtension{
+public class SuperfeedrEventExtension extends DefaultSuperfeerExtension {
 	
-	private EntryExtension entryExtension;
+	public static final String NAMESPACE = "http://jabber.org/protocol/pubsub#event";
+	public static final String ELEMENT_NAME = "event";
+
+	private StatusExtension status;
 	
-	public ItemExtension(EntryExtension entryExtension){
-		this.entryExtension = entryExtension;
+	private ItemsExtension items;
+	
+	@Override
+	public String getNamespace() {
+		return NAMESPACE;
 	}
 	
-	/**
-	 * @return the entry
-	 */
-	public EntryExtension getEntry() {
-		return entryExtension;
+	@Override
+	public String getElementName() {
+		return ELEMENT_NAME;
 	}
+
+	
+	public SuperfeedrEventExtension(StatusExtension status, ItemsExtension items) {
+		this.status = status;
+		this.items = items;
+	}
+	
+	public StatusExtension getStatus(){
+		return status;
+	}
+	
+	public ItemsExtension getItems(){
+		return items;
+	}
+
 }

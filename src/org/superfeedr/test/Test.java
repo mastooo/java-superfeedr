@@ -21,16 +21,24 @@
  */
 package org.superfeedr.test;
 
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.jivesoftware.smack.XMPPConnection;
 import org.superfeedr.OnNotificationHandler;
 import org.superfeedr.Superfeedr;
-import org.superfeedr.extension.ItemExtension;
-import org.superfeedr.extension.SuperfeedrEventExtension;
+import org.superfeedr.onSubUnsubscriptionHandler;
+import org.superfeedr.extension.notification.ItemExtension;
+import org.superfeedr.extension.notification.SuperfeedrEventExtension;
 
 public class Test {
 	public static void main(final String[] args) throws Exception {
+		
+		List<URL> urls = new ArrayList<URL>();
+		urls.add(new URL("http://search.twitter.com/search.atom?q=jackson"));
+
 		XMPPConnection.DEBUG_ENABLED = true;
 		Superfeedr feedr = new Superfeedr("##", "##", "superfeedr.com");
 
@@ -47,6 +55,17 @@ public class Test {
 						System.out.println(item.getEntry().getTitle());
 					}
 				System.out.println("\n\n");
+			}
+		});
+		
+		feedr.unsubscribe(urls, new onSubUnsubscriptionHandler() {
+			
+			public void onSubUnsubscription() {
+				System.err.println("OK SUB");
+			}
+
+			public void onError(String infos) {
+				System.err.println(infos);
 			}
 		});
 

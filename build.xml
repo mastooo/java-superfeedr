@@ -13,7 +13,7 @@
 	</target>
 	
 	<target name="build" depends="cleanup">
-		<javac srcdir="${source}" destdir="${build}" source="1.5" classpath="${lib}/smack.jar"/>
+		<javac srcdir="${source}" destdir="${build}" source="1.5" classpath="${lib}/smack.jar;${lib}/smackx.jar"/>
 		<copy todir="${build}/META-INF">
 			<fileset dir="${source}/META-INF"/>
 		</copy>

@@ -23,7 +23,7 @@ package org.superfeedr.provider;
 
 import org.jivesoftware.smack.packet.PacketExtension;
 import org.jivesoftware.smack.provider.PacketExtensionProvider;
-import org.superfeedr.extension.HttpExtension;
+import org.superfeedr.extension.notification.HttpExtension;
 import org.xmlpull.v1.XmlPullParser;
 
 public class HttpProvider implements PacketExtensionProvider{
