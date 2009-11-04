@@ -32,7 +32,7 @@ It you changed the code, you can rebuild the .jar file, by using `ant` in the wr
     import org.jivesoftware.smack.XMPPConnection;
     import org.superfeedr.OnNotificationHandler;
     import org.superfeedr.Superfeedr;
-    import org.superfeedr.onSubUnsubscriptionHandler;
+    import org.superfeedr.OnResponseHandler;
     import org.superfeedr.extension.notification.ItemExtension;
     import org.superfeedr.extension.notification.SuperfeedrEventExtension;
 
@@ -46,12 +46,12 @@ It you changed the code, you can rebuild the .jar file, by using `ant` in the wr
             // List of urls you want to track
             urls.add(new URL("http://superfeedr.com/dummy.xml"));
             urls.add(new URL("http://blog.superfeedr.com/atom.xml"));
-            urls.add(new URL("http://twitter.com/statuses/user_timeline/43417156.rss"));
+            urls.add(new URL("http://identi.ca/api/statuses/public_timeline.atom"));
         
             // Debugging will display a window that allows you to see incoming/outcoming traffic
             XMPPConnection.DEBUG_ENABLED = true;
             // Use your Superfeedr credentials
-            Superfeedr feedr = new Superfeedr("loggin", "password", "superfeedr.com");
+            Superfeedr feedr = new Superfeedr("julien", "inc0nueE", "superfeedr.com");
         
             // Adds notification Handler. The onNotification method will be called with a SuperfeedrEventExtension object.
             feedr.addOnNotificationHandler(new OnNotificationHandler() {
@@ -77,14 +77,13 @@ It you changed the code, you can rebuild the .jar file, by using `ant` in the wr
         
             // Actually perform the subscription, and calls the second argument when performed
             // You can obviously do 'unsubscribe' too.
-            feedr.subscribe(urls, new onSubUnsubscriptionHandler() {
-                public void onSubUnsubscription() {
-                    // Called upon valid subscription/unsubscription.
-                }
-                public void onError(String infos) {
-                    // Called when error
-                    System.err.println(infos);
-                }
+            feedr.unsubscribe(urls, new OnResponseHandler() {
+              public void onSuccess(Object response) {
+                // TODO Auto-generated method stub
+              }
+              public void onError(String infos) {
+                // TODO Auto-generated method stub
+              }
             });
         
             while (true) {
