@@ -34,8 +34,6 @@ import java.util.Map;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.filter.AndFilter;
-import org.jivesoftware.smack.filter.IQTypeFilter;
 import org.jivesoftware.smack.filter.OrFilter;
 import org.jivesoftware.smack.filter.PacketTypeFilter;
 import org.jivesoftware.smack.packet.IQ;
@@ -46,6 +44,7 @@ import org.jivesoftware.smack.packet.XMPPError;
 import org.jivesoftware.smack.packet.IQ.Type;
 import org.superfeedr.extension.notification.SuperfeedrEventExtension;
 import org.superfeedr.extension.subscription.SubUnSubExtension;
+import org.superfeedr.extension.subscription.SubscriptionListExtension;
 import org.superfeedr.packet.SuperfeedrIQ;
 
 /**
@@ -57,7 +56,7 @@ import org.superfeedr.packet.SuperfeedrIQ;
  * 
  */
 public class Superfeedr {
-	
+
 	private static final String FIREHOSER = "firehoser.superfeedr.com";
 
 	// The pseudo ISO 8601 date formatter that misses the timezone (thanks to
@@ -88,8 +87,8 @@ public class Superfeedr {
 
 	// The Listeners of event on this superfeedr instance
 	private ArrayList<OnNotificationHandler> onNotificationHandlers = new ArrayList<OnNotificationHandler>();
-	
-	private Map<String, onSubUnsubscriptionHandler> pendingOnSubUnSubHandlers = new HashMap<String, onSubUnsubscriptionHandler>();
+
+	private Map<String, OnResponseHandler> pendingOnReponseHandlers = new HashMap<String, OnResponseHandler>();
 
 	// The server this instance is connected to
 	private String server;
@@ -119,7 +118,7 @@ public class Superfeedr {
 		try {
 			connection.connect();
 			connection.login(this.jid, password);
-			
+
 			connection.addPacketListener(new SuperFeedrPacketListener(), new OrFilter(new PacketTypeFilter(Message.class), new PacketTypeFilter(IQ.class)));
 		} catch (XMPPException e) {
 			if (connection != null && connection.isConnected()) {
@@ -129,12 +128,13 @@ public class Superfeedr {
 			throw e;
 		}
 	}
-	
+
 	/**
 	 * This method is used to close the connection to the Superfeer Server.
+	 * 
 	 * @throws XMPPException
 	 */
-	public void close() throws XMPPException{
+	public void close() throws XMPPException {
 		if (connection != null && connection.isConnected()) {
 			connection.disconnect();
 		}
@@ -173,56 +173,75 @@ public class Superfeedr {
 	public void removeOnNotificationHandler(final OnNotificationHandler handler) {
 		onNotificationHandlers.remove(handler);
 	}
-	
-	private void subUnsubscribe(final SubUnSubExtension subUnsubscription, onSubUnsubscriptionHandler handler){
+
+	private void subUnsubscribe(final SubUnSubExtension subUnsubscription, OnResponseHandler handler) {
 		SuperfeedrIQ iq = new SuperfeedrIQ(subUnsubscription.toXML());
 		iq.setTo(FIREHOSER);
 		iq.setType(Type.SET);
 		connection.sendPacket(iq);
-		pendingOnSubUnSubHandlers.put(iq.getPacketID(), handler);
+		pendingOnReponseHandlers.put(iq.getPacketID(), handler);
 	}
-	
+
 	/**
-	 * Call this method to add subscription to your superfeedr account. The passed URL must be well formatted and must represent something that can be used as source by superfeedr. See the Superfeedr website for information about that.
-	 * @param feedUrls the list of feeds you want to add to your superfeedr account
-	 * @param handler the callback
+	 * Call this method to add subscription to your superfeedr account. The
+	 * passed URL must be well formatted and must represent something that can
+	 * be used as source by superfeedr. See the Superfeedr website for
+	 * information about that.
+	 * 
+	 * @param feedUrls
+	 *            the list of feeds you want to add to your superfeedr account
+	 * @param handler
+	 *            the callback
 	 */
-	public void subscribe(List<URL> feedUrls, onSubUnsubscriptionHandler handler){
+	public void subscribe(List<URL> feedUrls, OnResponseHandler handler) {
 		subUnsubscribe(new SubUnSubExtension(feedUrls, jid + "@" + server, SubUnSubExtension.TYPE_SUBSCRIPTION), handler);
 	}
-	
+
 	/**
 	 * Call this method to remove subscription from your superfeedr account.
-	 * @param feedUrls the list of feeds you want to add to your superfeedr account
-	 * @param handler the callback
+	 * 
+	 * @param feedUrls
+	 *            the list of feeds you want to add to your superfeedr account
+	 * @param handler
+	 *            the callback
 	 */
-	public void unsubscribe(List<URL> feedUrls, onSubUnsubscriptionHandler handler){
+	public void unsubscribe(List<URL> feedUrls, OnResponseHandler handler) {
 		subUnsubscribe(new SubUnSubExtension(feedUrls, jid + "@" + server, SubUnSubExtension.TYPE_UNSUBSCRIPTION), handler);
 	}
-	
+
 	/**
 	 * This method is used to retreive the feeds URL you subscribed to.
+	 * 
 	 * @return a list of your feed url
 	 */
-	public List<URL> getSubscriptionList(){
-		throw new UnsupportedOperationException("Curently not available");
+	public List<URL> getSubscriptionList(final OnResponseHandler handler) {
+
+		SubscriptionListExtension list = new SubscriptionListExtension(null, jid + "@" + server, 1);
+		System.err.println(list.toXML());
+		SuperfeedrIQ iq = new SuperfeedrIQ(list.toXML());
+		iq.setTo(FIREHOSER);
+		iq.setType(Type.GET);
+		connection.sendPacket(iq);
+		pendingOnReponseHandlers.put(iq.getPacketID(), handler);
+		return null;
 	}
-	
+
 	private class SuperFeedrPacketListener implements PacketListener {
 		public void processPacket(Packet packet) {
-			if (packet instanceof Message){
+			
+			if (packet instanceof Message) {
 				fireOnNotificationHandlers((SuperfeedrEventExtension) ((Message) packet).getExtension(SuperfeedrEventExtension.NAMESPACE));
-			}else{
+			} else {
 				String packetID = packet.getPacketID();
-				onSubUnsubscriptionHandler handler = pendingOnSubUnSubHandlers.get(packetID);
-				if (handler != null){
-					pendingOnSubUnSubHandlers.remove(packetID);
-					
+
+				OnResponseHandler handler = pendingOnReponseHandlers.get(packetID);
+
+				if (handler != null) {
+					pendingOnReponseHandlers.remove(packetID);
+
 					XMPPError error = packet.getError();
-					
-					if (error == null)
-						handler.onSubUnsubscription();
-					else{
+
+					if (error != null) {
 						StringBuilder builder = new StringBuilder(error.getCondition());
 						builder.append("Type = \n");
 						builder.append(error.getType().name());
@@ -233,10 +252,13 @@ public class Superfeedr {
 							builder.append("\n");
 						}
 						handler.onError(builder.toString());
-					}
+					} else {
 						
+						handler.onSuccess(null);
+
+					}
 				}
 			}
 		}
-	};
+	}
 }
