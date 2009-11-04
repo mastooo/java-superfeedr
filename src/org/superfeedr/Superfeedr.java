@@ -120,7 +120,7 @@ public class Superfeedr {
 			connection.connect();
 			connection.login(this.jid, password);
 			
-			connection.addPacketListener(new SuperFeedrPacketListener(), new OrFilter(new AndFilter(new PacketTypeFilter(Message.class), new OrFilter(new IQTypeFilter(IQ.Type.ERROR), new IQTypeFilter(IQ.Type.RESULT))), new PacketTypeFilter(IQ.class)));
+			connection.addPacketListener(new SuperFeedrPacketListener(), new OrFilter(new PacketTypeFilter(Message.class), new PacketTypeFilter(IQ.class)));
 		} catch (XMPPException e) {
 			if (connection != null && connection.isConnected()) {
 				connection.disconnect();
