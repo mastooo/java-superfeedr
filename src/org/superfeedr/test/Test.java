@@ -28,8 +28,8 @@ import java.util.List;
 
 import org.jivesoftware.smack.XMPPConnection;
 import org.superfeedr.OnNotificationHandler;
+import org.superfeedr.OnResponseHandler;
 import org.superfeedr.Superfeedr;
-import org.superfeedr.onSubUnsubscriptionHandler;
 import org.superfeedr.extension.notification.ItemExtension;
 import org.superfeedr.extension.notification.SuperfeedrEventExtension;
 
@@ -40,7 +40,18 @@ public class Test {
 		urls.add(new URL("http://search.twitter.com/search.atom?q=jackson"));
 
 		XMPPConnection.DEBUG_ENABLED = true;
-		Superfeedr feedr = new Superfeedr("##", "##", "superfeedr.com");
+		Superfeedr feedr = new Superfeedr("YOUR_LOGIN_HER", "YOUR_PASSWORD_HER", "superfeedr.com");
+		
+		feedr.getSubscriptionList(new OnResponseHandler() {
+			
+			public void onSuccess(Object obj) {
+				System.err.println(obj);
+			}
+			
+			public void onError(String infos) {
+				System.err.println("Error");
+			}
+		});
 
 		feedr.addOnNotificationHandler(new OnNotificationHandler() {
 			public void onNotification(final SuperfeedrEventExtension event) {
@@ -58,14 +69,16 @@ public class Test {
 			}
 		});
 		
-		feedr.unsubscribe(urls, new onSubUnsubscriptionHandler() {
+		feedr.unsubscribe(urls, new OnResponseHandler() {
 			
-			public void onSubUnsubscription() {
-				System.err.println("OK SUB");
+			public void onSuccess(Object response) {
+				// TODO Auto-generated method stub
+				
 			}
-
+			
 			public void onError(String infos) {
-				System.err.println(infos);
+				// TODO Auto-generated method stub
+				
 			}
 		});
 
