@@ -16,6 +16,83 @@ To use the Superfeedr java library, just add the file `./distrib/superfeedr.jar`
 
 See the class `org.superfeedr.test.Test` to know how to use it.
 
+## Building
+
+You don't need that if you don't need to change the code. Please just use the built `.jar` file in `/distrib`
+
+It you changed the code, you can rebuild the .jar file, by using `ant` in the wrapper directory.
+
+## Example
+
+        import java.net.URL;
+        import java.util.ArrayList;
+        import java.util.Iterator;
+        import java.util.List;
+
+        import org.jivesoftware.smack.XMPPConnection;
+        import org.superfeedr.OnNotificationHandler;
+        import org.superfeedr.Superfeedr;
+        import org.superfeedr.onSubUnsubscriptionHandler;
+        import org.superfeedr.extension.notification.ItemExtension;
+        import org.superfeedr.extension.notification.SuperfeedrEventExtension;
+
+        /*
+        Small Sample/example that you can start to use to track Superfeedr.
+        */
+        class ExampleProgram {
+            public static void main(final String[] args) throws Exception {
+        
+                List<URL> urls = new ArrayList<URL>();
+                // List of urls you want to track
+                urls.add(new URL("http://superfeedr.com/dummy.xml"));
+                urls.add(new URL("http://blog.superfeedr.com/atom.xml"));
+                urls.add(new URL("http://twitter.com/statuses/user_timeline/43417156.rss"));
+        
+                // Debugging will display a window that allows you to see incoming/outcoming traffic
+                XMPPConnection.DEBUG_ENABLED = true;
+                // Use your Superfeedr credentials
+                Superfeedr feedr = new Superfeedr("loggin", "password", "superfeedr.com");
+        
+                // Adds notification Handler. The onNotification method will be called with a SuperfeedrEventExtension object.
+                feedr.addOnNotificationHandler(new OnNotificationHandler() {
+                    public void onNotification(final SuperfeedrEventExtension event) {
+                        // Displays the feed url, the HTTP status and the Log. (See Superfeedr Doc for more info)
+                        System.err.println(event.getStatus().getFeedURL());
+                        System.err.println(event.getStatus().getHttpExtension().getCode());
+                        System.err.println(event.getStatus().getHttpExtension().getInfo());
+                        // And now the items
+                        if (event.getItems().getItemsCount() == 0) {
+                            System.out.println("No items");
+                        } else
+                        // For each item
+                        for (Iterator<ItemExtension> iterator = event.getItems().getItems(); iterator.hasNext();) {
+                            ItemExtension item = iterator.next();
+                            // Display it's title and link
+                            System.out.println(item.getEntry().getTitle());
+                            System.out.println(item.getEntry().getLink());
+                        }
+                        System.out.println("\n\n");
+                    }
+                });
+        
+                // Actually perform the subscription, and calls the second argument when performed
+                // You can obviously do 'unsubscribe' too.
+                feedr.subscribe(urls, new onSubUnsubscriptionHandler() {
+                    public void onSubUnsubscription() {
+                        // Called upon valid subscription/unsubscription.
+                    }
+                    public void onError(String infos) {
+                        // Called when error
+                        System.err.println(infos);
+                    }
+                });
+        
+                while (true) {
+                    Thread.sleep(1000);
+                }
+            }
+        }
+
 ## Warning
 
 We know our limits and we know *we can’t actively support* wrappers in _every_ languages. Like everybody, we have our favorite languages and platform, and there is little chance that we ever get a deep enough knownledge in all that languages that you guys use to offer great services. So, for us, the *limit of what we can provide and support is [our API (both XMPP and PubSubHubbub)](http://superfeedr.com/documentation).*
