@@ -21,6 +21,8 @@
  */
 package org.superfeedr.extension.notification;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 
 public class EntryExtension extends DefaultSuperfeerExtension {
@@ -36,14 +38,20 @@ public class EntryExtension extends DefaultSuperfeerExtension {
 
 	private String title;
 
+    private String content;
+
+    private Collection<AuthorExtension> authors;
+
 	public EntryExtension(final String id2, final String link2, final String linkType2, final Date published2, final String title2,
-			final String summary2) {
+			final String summary2, final String content, final Collection<AuthorExtension> authors) {
 		this.id = id2;
 		this.link = link2;
 		this.linkType = linkType2;
 		this.published = published2;
 		this.title = title2;
 		this.summary = summary2;
+        this.content = content;
+        this.authors = authors;
 	}
 
 	/**
@@ -98,4 +106,20 @@ public class EntryExtension extends DefaultSuperfeerExtension {
 	public String getTitle() {
 		return title;
 	}
+
+    /**
+     * The content of this entry
+     * @return content
+     */
+    public String getContent() {
+        return content;
+    }
+
+    /**
+     * Authors of this entry
+     * @return
+     */
+    public Collection<AuthorExtension> getAuthors() {
+        return Collections.unmodifiableCollection(authors);
+    }
 }

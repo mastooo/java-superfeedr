@@ -1,9 +1,7 @@
 package org.superfeedr.extension.subscription;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 
 public class SubUnSubExtension extends PseudoPubSubPacketExtension{
@@ -29,8 +27,8 @@ public class SubUnSubExtension extends PseudoPubSubPacketExtension{
 
 	
 	
-	public Iterator<SubUnSubFeedExtension> getFeedURLs(){
-		return feedURLs == null ? null : feedURLs.iterator();
+	public Collection<SubUnSubFeedExtension> getFeedURLs(){
+		return feedURLs == null ? null : Collections.unmodifiableCollection(feedURLs);
 	}
 
 	@Override

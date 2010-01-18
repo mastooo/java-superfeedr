@@ -30,11 +30,14 @@ public class StatusExtension extends DefaultSuperfeerExtension {
 	private HttpExtension httpExtension;
 	
 	private Date nextFetch;
+
+    private String title;
 	
 	public StatusExtension() {
 	}
 	
-	public StatusExtension(final String feedURL, final Date nextFetch, HttpExtension extension){
+	public StatusExtension(String title, String feedURL, Date nextFetch, HttpExtension extension){
+        this.title = title;
 		this.feedURL = feedURL;
 		this.httpExtension = extension;
 		this.nextFetch = nextFetch;
@@ -54,4 +57,8 @@ public class StatusExtension extends DefaultSuperfeerExtension {
 	public Date getNextFetch(){
 		return nextFetch;
 	}
+
+    public String getTitle() {
+        return title;
+    }
 }

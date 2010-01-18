@@ -61,8 +61,7 @@ public class Test {
 				if (event.getItems().getItemsCount() == 0) {
 					System.out.println("No items");
 				} else
-					for (Iterator<ItemExtension> iterator = event.getItems().getItems(); iterator.hasNext();) {
-						ItemExtension item = iterator.next();
+					for (ItemExtension item : event.getItems().getItems()) {
 						System.out.println(item.getEntry().getTitle());
 					}
 				System.out.println("\n\n");
