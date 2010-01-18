@@ -66,7 +66,6 @@ It you changed the code, you can rebuild the .jar file, by using `ant` in the wr
                     } else
                     // For each item
                     for (ItemExtension item : event.getItems().getItems()) {
-                        ItemExtension item = iterator.next();
                         // Display it's title and link
                         System.out.println(item.getEntry().getTitle());
                         System.out.println(item.getEntry().getLink());
