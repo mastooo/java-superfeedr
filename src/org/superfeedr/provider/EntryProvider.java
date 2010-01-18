@@ -41,6 +41,7 @@ public class EntryProvider implements PacketExtensionProvider{
 		Date published = null;
 		String summary = null;
 		String title = null;
+        String content = null;
 		
 		int tag = parser.next();
 		
@@ -52,6 +53,9 @@ public class EntryProvider implements PacketExtensionProvider{
 				}else if ("summary".equals(parser.getName())){
 					parser.next();
 					summary = parser.getText();
+                }else if ("content".equals(parser.getName())){
+                    parser.next();
+                    content = parser.getText();
 				}else if ("link".equals(parser.getName())){
 					link = parser.getAttributeValue(null, "href");
 					linkType = parser.getAttributeValue(null, "type");
@@ -65,7 +69,7 @@ public class EntryProvider implements PacketExtensionProvider{
 			}
 			tag = parser.next();
 		}
-		return new EntryExtension(id, link, linkType, published, title, summary);
+		return new EntryExtension(id, link, linkType, published, title, summary, content);
 	}
 
 }

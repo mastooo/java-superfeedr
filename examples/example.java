@@ -39,8 +39,7 @@ class ExampleProgram {
                     System.out.println("No items");
                 } else
                 // For each item
-                for (Iterator<ItemExtension> iterator = event.getItems().getItems(); iterator.hasNext();) {
-                    ItemExtension item = iterator.next();
+                for (ItemExtension item : event.getItems().getItems()) {
                     // Display it's title and link
                     System.out.println(item.getEntry().getTitle());
                     System.out.println(item.getEntry().getLink());
@@ -51,7 +50,7 @@ class ExampleProgram {
         
         // Actually perform the subscription, and calls the second argument when performed
         // You can obviously do 'unsubscribe' too.
-        feedr.subscribe(urls, new onSubUnsubscriptionHandler() {
+        feedr.subscribe(urls, new OnSubUnsubscriptionHandler() {
             public void onSubUnsubscription() {
                 // Called upon valid subscription/unsubscription.
             }

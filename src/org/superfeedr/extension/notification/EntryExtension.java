@@ -36,14 +36,17 @@ public class EntryExtension extends DefaultSuperfeerExtension {
 
 	private String title;
 
+    private String content;
+
 	public EntryExtension(final String id2, final String link2, final String linkType2, final Date published2, final String title2,
-			final String summary2) {
+			final String summary2, String content) {
 		this.id = id2;
 		this.link = link2;
 		this.linkType = linkType2;
 		this.published = published2;
 		this.title = title2;
 		this.summary = summary2;
+        this.content = content;
 	}
 
 	/**
