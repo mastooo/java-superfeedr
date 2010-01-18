@@ -21,7 +21,8 @@
  */
 package org.superfeedr.extension.notification;
 
-import java.util.Iterator;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class ItemsExtension extends DefaultSuperfeerExtension {
@@ -35,20 +36,9 @@ public class ItemsExtension extends DefaultSuperfeerExtension {
 		this.items = items;
 	}
 	
-	public Iterator<ItemExtension> getItems(){
-		return items == null ? new Iterator<ItemExtension>() {
-
-			public boolean hasNext() {
-				return false;
-			}
-
-			public ItemExtension next() {
-				return null;
-			}
-
-			public void remove() {
-			}
-		} : items.iterator();
+	public Collection<ItemExtension> getItems()
+    {
+		return Collections.unmodifiableCollection(items);
 	}
 	
 	public String getNode(){

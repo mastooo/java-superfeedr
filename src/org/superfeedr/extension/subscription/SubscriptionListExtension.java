@@ -1,6 +1,7 @@
 package org.superfeedr.extension.subscription;
 
-import java.util.Iterator;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class SubscriptionListExtension extends PseudoPubSubPacketExtension{
@@ -43,8 +44,8 @@ public class SubscriptionListExtension extends PseudoPubSubPacketExtension{
 	/**
 	 * @return the subscriptions
 	 */
-	public Iterator<SubscriptionExtension> getSubscriptions() {
-		return subscriptions == null ? null : subscriptions.iterator();
+	public Collection<SubscriptionExtension> getSubscriptions() {
+		return subscriptions == null ? null : Collections.unmodifiableCollection(subscriptions);
 	}
 
 	/**
