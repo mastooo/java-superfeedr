@@ -36,8 +36,9 @@ public class StatusProvider extends EmbeddedExtensionProvider{
 	protected PacketExtension createReturnExtension(String currentElement, String currentNamespace, Map<String, String> attributeMap,
 			List<? extends PacketExtension> content) {
 		String feedURL = attributeMap.get("feed");
+        String title = attributeMap.get("title");
 		DefaultPacketExtension nextFetch = ((DefaultPacketExtension)content.get(1));
-		return new StatusExtension(feedURL, Superfeedr.convertDate(nextFetch.getValue("next")), (HttpExtension)content.get(0));
+		return new StatusExtension(title, feedURL, Superfeedr.convertDate(nextFetch.getValue("next")), (HttpExtension)content.get(0));
 	}
 
 }
