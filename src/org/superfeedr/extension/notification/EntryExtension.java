@@ -108,6 +108,14 @@ public class EntryExtension extends DefaultSuperfeerExtension {
 	}
 
     /**
+     * The content of this entry
+     * @return content
+     */
+    public String getContent() {
+        return content;
+    }
+
+    /**
      * Authors of this entry
      * @return
      */
